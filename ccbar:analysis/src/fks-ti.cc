@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     }
 
     // -n: xyzSize
-    if (strcmp(argv[0], "-l") == 0) {
+    if (strcmp(argv[0], "-n") == 0) {
       xyzSize = atoi(argv[1]);  // atoi(): convert ASCII string to integer
       if (!xyzSize) {
         usage(programName);

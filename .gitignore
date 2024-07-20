@@ -195,7 +195,9 @@ cython_debug/
 #.idea/
 
 # Custom
+**/.DS_Store
 bridge-2.0.2/
 fftw-3.3.10/
 lime-1.3.2/
 data
+**/bin/
