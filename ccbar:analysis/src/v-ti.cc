@@ -2,8 +2,8 @@
  * @file v-ti.cc
  * @author Tianchen Zhang
  * @brief Central potential (time-independent version)
- * @version 1.1
- * @date 2024-02-13
+ * @version 1.2
+ * @date 2024-07-20
  *
  */
 
@@ -26,7 +26,7 @@ void usage(char* name) {
           name);
   fprintf(stderr,
           "OPTIONS: \n"
-          "    -l <LENGTH>:       Array length\n"
+          "    -n <XYZSIZE>:      Spacial size of lattice\n"
           "    -mps <M_PS>:       M_PS (LUnit)\n"
           "    -mv <M_V>:         M_V (LUnit)\n"
           "    -mc <MC>:          charm quark mass (LUnit)\n"
@@ -38,7 +38,7 @@ void usage(char* name) {
 // Main function
 int main(int argc, char* argv[]) {
   // Global variables
-  int arrayLength = 0;
+  int xyzSize = 0;
   DOUBLE mPS = 0.0;
   DOUBLE mV = 0.0;
   DOUBLE mc = 0.0;
@@ -58,10 +58,10 @@ int main(int argc, char* argv[]) {
       exit(0);
     }
 
-    // -l: arrayLength
+    // -n: xyzSize
     if (strcmp(argv[0], "-l") == 0) {
-      arrayLength = atoi(argv[1]);  // atoi(): convert ASCII string to integer
-      if (!arrayLength) {
+      xyzSize = atoi(argv[1]);  // atoi(): convert ASCII string to integer
+      if (!xyzSize) {
         usage(programName);
         exit(1);
       }
@@ -141,15 +141,15 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
-  CVARRAY prev_v(arrayLength), ppotps(arrayLength), v0(arrayLength),
-      vs(arrayLength);
+  int arrayLength = int(pow(xyzSize, 3));
+
+  CVARRAY prev_v(arrayLength), ppotps(arrayLength), v0(arrayLength), vs(arrayLength);
   prev_v = ppotps = v0 = vs = 0.0;
 
   readBin(argv[0], arrayLength, prev_v);
   readBin(argv[1], arrayLength, ppotps);
 
-  v0 = 1 / (4.0 * mc) * (3.0 * prev_v + ppotps) + 1 / 4.0 * (3.0 * mV + mPS) -
-       2.0 * mc;
+  v0 = 1 / (4.0 * mc) * (3.0 * prev_v + ppotps) + 1 / 4.0 * (3.0 * mV + mPS) - 2.0 * mc;
   vs = 1 / mc * (prev_v - ppotps) + (mV - mPS);
 
   writeBin(ofnameV0, arrayLength, v0);

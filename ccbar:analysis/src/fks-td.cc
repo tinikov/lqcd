@@ -2,8 +2,8 @@
  * @file fks-td.cc
  * @author Tianchen Zhang
  * @brief F_{KS} (time-dependent version)
- * @version 1.1
- * @date 2024-02-13
+ * @version 1.2
+ * @date 2024-07-20
  *
  */
 
@@ -27,15 +27,15 @@ void usage(char* name) {
           name);
   fprintf(stderr,
           "OPTIONS: \n"
-          "    -l <LENGTH>:       Array length\n"
-          "    -o <OFNAME>:        ofname of F_KS\n"
-          "    [-h, --help]:      Print help\n");
+          "    -n <XYZSIZE>:   Spacial size of lattice\n"
+          "    -o <OFNAME>:    ofname of F_KS\n"
+          "    [-h, --help]:   Print help\n");
 }
 
 // Main function
 int main(int argc, char* argv[]) {
   // Global variables
-  int arrayLength = 0;
+  int xyzSize = 0;
   static const char* ofname = NULL;
   char programName[128];
   strncpy(programName, basename(argv[0]), 127);
@@ -50,10 +50,10 @@ int main(int argc, char* argv[]) {
       exit(0);
     }
 
-    // -l: arrayLength
+    // -n: xyzSize
     if (strcmp(argv[0], "-l") == 0) {
-      arrayLength = atoi(argv[1]);  // atoi(): convert ASCII string to integer
-      if (!arrayLength) {
+      xyzSize = atoi(argv[1]);  // atoi(): convert ASCII string to integer
+      if (!xyzSize) {
         usage(programName);
         exit(1);
       }
@@ -84,6 +84,8 @@ int main(int argc, char* argv[]) {
     usage(programName);
     exit(1);
   }
+
+  int arrayLength = int(pow(xyzSize, 3));
 
   CVARRAY ddt(arrayLength), fks(arrayLength);
   ddt = fks = 0.0;

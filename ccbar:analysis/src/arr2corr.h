@@ -1,14 +1,14 @@
 /**
- * @file correlator.h
+ * @file arr2corr.h
  * @author Tianchen Zhang
  * @brief
- * @version 1.1
- * @date 2024-02-13
+ * @version 1.2
+ * @date 2024-07-20
  *
  */
 
-#ifndef CCBAR_SRC_CORRELATOR_H_
-#define CCBAR_SRC_CORRELATOR_H_
+#ifndef CCBAR_SRC_ARR2CORR_H_
+#define CCBAR_SRC_ARR2CORR_H_
 
 #include <complex>
 #include <valarray>

@@ -4,18 +4,16 @@ SOURCE = ./src
 BIN = ./bin
 
 PROG_NAME = \
-a1plus \
-cart2sphr \
-effmass \
-fks-td \
-fks-ti \
-jre \
 mean \
-norm \
-prev \
+jre \
 trev2 \
-v-td \
+effmass \
+a1plus \
+prev \
+fks-ti \
 v-ti \
+fks-td \
+v-td \
 
 PRE = \
 dataio.o \

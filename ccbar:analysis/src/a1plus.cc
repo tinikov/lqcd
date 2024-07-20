@@ -15,7 +15,7 @@
 #include <complex>
 #include <valarray>
 
-#include "correlator.h"
+#include "arr2corr.h"
 #include "dataio.h"
 #include "misc.h"
 
@@ -27,9 +27,9 @@ void usage(char* name) {
           name);
   fprintf(stderr,
           "OPTIONS: \n"
-          "    -n <XYZSIZE>:     Spacial size of lattice\n"
-          "    -d <OFDIR>:       Directory of output files\n"
-          "    [-h, --help]:     Print help\n");
+          "    -n <XYZSIZE>:   Spacial size of lattice\n"
+          "    -d <OFDIR>:     Directory of output files\n"
+          "    [-h, --help]:   Print help\n");
 }
 
 // Custom function declaration

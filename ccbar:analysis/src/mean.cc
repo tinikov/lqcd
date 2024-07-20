@@ -1,9 +1,9 @@
 /**
  * @file mean.cc
  * @author Tianchen Zhang
- * @brief Mean for raw data (Optional: jackknife variance)
- * @version 1.1
- * @date 2024-02-13
+ * @brief Mean for raw data (Optional: calculate jackknife variance)
+ * @version 1.2
+ * @date 2024-07-20
  *
  */
 
@@ -19,7 +19,7 @@
 #include "misc.h"
 
 void usage(char* name) {
-  fprintf(stderr, "Mean for raw data (Optional: jackknife variance)\n");
+  fprintf(stderr, "Mean for raw data (Optional: calculate jackknife variance)\n");
   fprintf(stderr,
           "USAGE: \n"
           "    %s [OPTIONS] ifname1 ifname2 [ifname3 ...]\n",
@@ -28,28 +28,23 @@ void usage(char* name) {
           "OPTIONS: \n"
           "    -l <LENGTH>:      Length of data arrays\n"
           "    -o <OFNAME>:      Name of output file\n"
-          "    [-j]:             Calculate jackknife variance\n"
-          "    [-jd]:            Calculate jackknife variance (input: DOUBLE)\n"
-          "    [-t]:             Also save a txt file\n"
+          "    [-jc]:            Calculate jackknife variance (COMPLX)\n"
+          "    [-jd]:            Calculate jackknife variance (DOUBLE)\n"
           "    [-h, --help]:     Print help\n");
 }
 
 // Custom function declaration
-void arithmeticMean(char* rawDataList[], const char* result, int arrayLength,
-                    int fileCountTotal);
-void jackknifeMean(char* rawDataList[], const char* result, int arrayLength,
-                   int fileCountTotal);
-void jackknifeMeanD(char* rawDataList[], const char* result, int arrayLength,
-                    int fileCountTotal);
+void arithmeticMean(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal);
+void jackknifeMeanC(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal);
+void jackknifeMeanD(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal);
 
 // Main function
 int main(int argc, char* argv[]) {
   // Global variables
   int arrayLength = 0;
   static const char* ofname = NULL;
-  bool isJackknife = false;
+  bool isJackknifeC = false;
   bool isJackknifeD = false;
-  bool isSaveTxt = false;
   char programName[128];
   strncpy(programName, basename(argv[0]), 127);
   argc--;
@@ -87,9 +82,9 @@ int main(int argc, char* argv[]) {
       continue;
     }
 
-    // -j: jackknife variance
-    if (strcmp(argv[0], "-j") == 0) {
-      isJackknife = true;
+    // -jc: jackknife variance
+    if (strcmp(argv[0], "-jc") == 0) {
+      isJackknifeC = true;
       argc--;
       argv++;
       continue;
@@ -98,14 +93,6 @@ int main(int argc, char* argv[]) {
     // -jd: jackknife variance (on DOUBLE)
     if (strcmp(argv[0], "-jd") == 0) {
       isJackknifeD = true;
-      argc--;
-      argv++;
-      continue;
-    }
-
-    // -t: save txt
-    if (strcmp(argv[0], "-t") == 0) {
-      isSaveTxt = true;
       argc--;
       argv++;
       continue;
@@ -122,26 +109,19 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
-  if (isJackknife) {
-    jackknifeMean(argv, ofname, arrayLength, fileCountTotal);
+  if (isJackknifeC) {
+    jackknifeMeanC(argv, ofname, arrayLength, fileCountTotal);
   } else if (isJackknifeD) {
     jackknifeMeanD(argv, ofname, arrayLength, fileCountTotal);
   } else {
     arithmeticMean(argv, ofname, arrayLength, fileCountTotal);
   }
 
-  if (isSaveTxt) {
-    char txtfname[2048];
-    addSuffix(ofname, "txt", txtfname);
-    bin2txt(ofname, txtfname, arrayLength);
-  }
-
   return 0;
 }
 
 // Custom function definition
-void jackknifeMean(char* rawDataList[], const char* result, int arrayLength,
-                   int fileCountTotal) {
+void jackknifeMeanC(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal) {
   DVARRAY mean(arrayLength), var(arrayLength);
   mean = var = 0.0;
 
@@ -184,8 +164,7 @@ void jackknifeMean(char* rawDataList[], const char* result, int arrayLength,
   writeBin(result, arrayLength, out);
 }
 
-void jackknifeMeanD(char* rawDataList[], const char* result, int arrayLength,
-                    int fileCountTotal) {
+void jackknifeMeanD(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal) {
   DVARRAY mean(arrayLength), var(arrayLength);
   mean = var = 0.0;
 
@@ -218,8 +197,7 @@ void jackknifeMeanD(char* rawDataList[], const char* result, int arrayLength,
   writeBin(result, arrayLength, out);
 }
 
-void arithmeticMean(char* rawDataList[], const char* result, int arrayLength,
-                    int fileCountTotal) {
+void arithmeticMean(char* rawDataList[], const char* result, int arrayLength, int fileCountTotal) {
   CVARRAY mean(arrayLength);
   mean = 0.0;
 

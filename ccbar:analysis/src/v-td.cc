@@ -2,8 +2,8 @@
  * @file v-td.cc
  * @author Tianchen Zhang
  * @brief Vcc and Vspin (time-dependent version)
- * @version 1.1
- * @date 2024-02-13
+ * @version 1.2
+ * @date 2024-07-20
  *
  */
 
@@ -26,7 +26,7 @@ void usage(char* name) {
           name);
   fprintf(stderr,
           "OPTIONS: \n"
-          "    -l <LENGTH>:       Array length\n"
+          "    -n <XYZSIZE>:      Spacial size of lattice\n"
           "    -mc <MASS>:        Kinetic mass of charm quark\n"
           "    -ov0 <OFNAMEV0>:   ofname of v0\n"
           "    -ovs <OFNAMEVS>:   ofname of vs\n"
@@ -36,7 +36,7 @@ void usage(char* name) {
 // Main function
 int main(int argc, char* argv[]) {
   // Global variables
-  int arrayLength = 0;
+  int xyzSize = 0;
   DOUBLE mc = 0.0;
   static const char* ofnameV0 = NULL;
   static const char* ofnameVs = NULL;
@@ -53,10 +53,10 @@ int main(int argc, char* argv[]) {
       exit(0);
     }
 
-    // -l: arrayLength
+    // -n: xyzSize
     if (strcmp(argv[0], "-l") == 0) {
-      arrayLength = atoi(argv[1]);  // atoi(): convert ASCII string to integer
-      if (!arrayLength) {
+      xyzSize = atoi(argv[1]);  // atoi(): convert ASCII string to integer
+      if (!xyzSize) {
         usage(programName);
         exit(1);
       }
@@ -112,6 +112,8 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
+  int arrayLength = int(pow(xyzSize, 3));
+
   CVARRAY v0(arrayLength), vs(arrayLength);
   v0 = vs = 0.0;
 
@@ -124,12 +126,8 @@ int main(int argc, char* argv[]) {
   }
 
   v0 = 1 / (4.0 * mc) * (3 * data[4] + data[5]) -
-       1 / 4.0 *
-           (3 * (log(data[1]) - log(data[0])) / 2.0 +
-            (log(data[3]) - log(data[2])) / 2.0) -
-       2 * mc;
-  vs = 1.0 / mc * (data[4] - data[5]) -
-       (log(data[1] / data[3]) - log(data[0] / data[2])) / 2.0;
+       1 / 4.0 * (3 * (log(data[1]) - log(data[0])) / 2.0 + (log(data[3]) - log(data[2])) / 2.0) - 2 * mc;
+  vs = 1.0 / mc * (data[4] - data[5]) - (log(data[1] / data[3]) - log(data[0] / data[2])) / 2.0;
 
   writeBin(ofnameVs, arrayLength, v0);
   writeBin(ofnameV0, arrayLength, vs);
