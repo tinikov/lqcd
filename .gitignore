@@ -201,3 +201,5 @@ fftw-3.3.10/
 lime-1.3.2/
 data
 **/bin/
+**/fig/
+**/result/

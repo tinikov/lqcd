@@ -6,6 +6,7 @@ BIN = ./bin
 PROG_NAME = \
 mean \
 jre \
+cart2sphr \
 trev2 \
 effmass \
 a1plus \
