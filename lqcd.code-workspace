@@ -4,5 +4,63 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"latex-workshop.latex.tools": [
+			// {
+			// 	"name": "latexmk",
+			// 	"command": "latexmk",
+			// 	"args": [
+			// 		"-synctex=1",
+			// 		"-interaction=nonstopmode",
+			// 		"-file-line-error",
+			// 		"-outdir=%OUTDIR%",
+			// 		"%DOC%"
+			// 	],
+			// 	"env": {}
+			// },
+			{
+				"name": "lualatex",
+				"command": "lualatex",
+				"args": [
+					"--cmdx",
+					"-file-line-error",
+					"-synctex=1",
+					"-interaction=nonstopmode",
+					"-halt-on-error",
+					"%DOC%"
+				],
+				"env": {}
+			},
+			{
+				"name": "bibtex",
+				"command": "bibtex",
+				"args": [
+					"%DOCFILE%"
+				],
+			},
+		],
+		"latex-workshop.latex.recipes": [
+			{
+				"name": "L→B→L→L",
+				"tools": [
+					"lualatex",
+					"bibtex",
+					"lualatex",
+					"lualatex"
+				]
+			},
+			{
+				"name": "lualatex🔃",
+				"tools": [
+					"lualatex"
+				]
+			},
+			// {
+			// 	"name": "latexmk🔃",
+			// 	"tools": [
+			// 		"latexmk"
+			// 	]
+			// },
+		],
+	}
 }
