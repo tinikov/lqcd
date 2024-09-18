@@ -6,8 +6,11 @@
 % \usepackage{amsthm}
 % \usepackage{amsfonts}
 
-% \usepackage{graphics}
-% \usepackage{subfig}
+\usepackage{graphicx}
+\graphicspath{
+  {./src/img/}
+}
+\usepackage{subfig}
 \usepackage{lmodern}
 
 \usepackage[hidelinks]{hyperref}
@@ -15,7 +18,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{condition}{Condition}
 
-\newcommand{\Eq}[1]{Eq.~\ref{#1}}
+\newcommand{\Eq}[1]{Eq.~(\ref{#1})}
 \newcommand{\Sec}[1]{Sec.~\ref{#1}}
 \newcommand{\Fig}[1]{Fig.~\ref{#1}}
 \newcommand{\Table}[1]{Table.~\ref{#1}}
