@@ -484,5 +484,5 @@ data
 **/result/
 
 ## articles
-article:gauge-dep/src/
+# article:gauge-dep/src
 article:gauge-dep/main.pdf
