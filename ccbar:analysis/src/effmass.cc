@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
     }
 
     // -ep: Prefix for exp output files
-    if (strcmp(argv[0], "-d") == 0) {
+    if (strcmp(argv[0], "-ep") == 0) {
       expPrefix = argv[1];
       if (expPrefix == NULL) {
         usage(programName);
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
     }
 
     // -hp: Prefix for csh output files
-    if (strcmp(argv[0], "-d") == 0) {
+    if (strcmp(argv[0], "-hp") == 0) {
       cshPrefix = argv[1];
       if (cshPrefix == NULL) {
         usage(programName);
