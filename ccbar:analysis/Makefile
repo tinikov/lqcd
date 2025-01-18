@@ -31,11 +31,9 @@ bin:
 $(TARGETS): $(BIN)/%: $(SOURCE)/%.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $< $(OBJS) -o $@
 
-.PHONY: clean
 clean:
 	$(RM) $(SOURCE)/*.o
 
-.PHONY: clean.all
 clean.all:
 	$(RM) $(TARGETS)
 	$(RM) $(SOURCE)/*.o

@@ -1,11 +1,11 @@
 /**
  * @file correlator.cpp
- * @author Tianchen (tinikov137@gmail.com)
+ * @author Tianchen (i@tinikov.com)
  * @brief
  * @version 0.1
- * @date 2024-07-01
+ * @date 2025-01-17
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -13,8 +13,8 @@
 using Bridge::vout;
 
 namespace {
-const std::string test_name = "sample_Spectrum";
-const std::string parameter_file_default = "sample_Spectrum_Wilson_Hadron2ptFunction.yaml";
+const std::string test_name = "solve_correlator";
+const std::string parameter_file_default = "corr_12x24.yaml";
 }  // namespace
 
 //====================================================================
@@ -29,19 +29,16 @@ int hadron_2ptFunction(const Parameters &params_all) {
   const int Nvol = CommonParameters::Nvol();
 
   const Parameters params_spectrum = params_all.lookup("Spectrum");
-  const Parameters params_gfix = params_all.lookup("GaugeFixing");
   const Parameters params_fopr = params_all.lookup("Fopr");
   const Parameters params_solver = params_all.lookup("Solver");
   const Parameters params_source = params_all.lookup("Source");
 
-  const string str_gconf_status = params_spectrum.get_string("gauge_config_status");
   const string str_gconf_read = params_spectrum.get_string("gauge_config_type_input");
   const string readfile = params_spectrum.get_string("config_filename_input");
   const string str_rand_type = params_spectrum.get_string("random_number_type");
   const unsigned long seed = params_spectrum.get_unsigned_long("seed_for_random_number");
   const string str_vlevel = params_spectrum.get_string("verbose_level");
 
-  const string str_gfix_type = params_gfix.get_string("gauge_fixing_type");
   const string str_fopr_type = params_fopr.get_string("fermion_type");
   const string str_gmset_type = params_fopr.get_string("gamma_matrix_type");
   const string str_solver_type = params_solver.get_string("solver_type");
@@ -50,63 +47,20 @@ int hadron_2ptFunction(const Parameters &params_all) {
   const Bridge::VerboseLevel vl = vout.set_verbose_level(str_vlevel);
 
   //- print input parameters
-  vout.general(vl, "  gconf_status = %s\n", str_gconf_status.c_str());
   vout.general(vl, "  gconf_read   = %s\n", str_gconf_read.c_str());
   vout.general(vl, "  readfile     = %s\n", readfile.c_str());
   vout.general(vl, "  rand_type    = %s\n", str_rand_type.c_str());
   vout.general(vl, "  seed         = %lu\n", seed);
   vout.general(vl, "  vlevel       = %s\n", str_vlevel.c_str());
-  vout.general(vl, "  gfix_type    = %s\n", str_gfix_type.c_str());
   vout.general(vl, "  gmset_type   = %s\n", str_gmset_type.c_str());
   vout.general(vl, "  solver_type  = %s\n", str_solver_type.c_str());
   vout.general(vl, "  source_type  = %s\n", str_source_type.c_str());
-
-  //- input parameter check
-  int err = 0;
-  err += ParameterCheck::non_NULL(str_gconf_status);
-
-  if (err) {
-    vout.crucial(vl, "Error at %s: input parameters have not been set\n", test_name.c_str());
-    exit(EXIT_FAILURE);
-  }
-
-  if (str_solver_type == "CG") {
-    vout.crucial(vl, "Error at %s: CG can not be adopted. Use CGNE,CGNR, instead.\n", test_name.c_str());
-    exit(EXIT_FAILURE);
-  }
-
-  if ((str_gfix_type == "Coulomb") || (str_gfix_type == "Landau")) {
-    if (CommonParameters::Nc() != 3) {
-      vout.crucial(vl, "check skipped: Nc = 3 is needed, but Nc = %d.\n\n", CommonParameters::Nc());
-      // return EXIT_SKIP;
-      exit(EXIT_FAILURE);
-    }
-  }
 
   RandomNumberManager::initialize(str_rand_type, seed);
 
   // ####  Set up a gauge configuration  ####
   Field_G U(Nvol, Ndim);
-
-  if (str_gconf_status == "Continue") {
-    GaugeConfig(str_gconf_read).read(U, readfile);
-  } else if (str_gconf_status == "Cold_start") {
-    GaugeConfig("Unit").read(U);
-  } else if (str_gconf_status == "Hot_start") {
-    GaugeConfig("Random").read(U);
-  } else {
-    vout.crucial(vl, "Error at %s: unsupported gconf status \"%s\"\n", test_name.c_str(), str_gconf_status.c_str());
-    exit(EXIT_FAILURE);
-  }
-
-  // ####  Gauge fixing  ####
-  {
-    Field_G Ufix(Nvol, Ndim);
-    unique_ptr<GaugeFixing> gfix(GaugeFixing::New(str_gfix_type, params_gfix));
-
-    gfix->fix(Ufix, U);
-    copy(U, Ufix);
-  }
+  GaugeConfig(str_gconf_read).read(U, readfile);
 
   // ####  object setup  #####
   unique_ptr<GammaMatrixSet> gmset(GammaMatrixSet::New(str_gmset_type));
@@ -134,7 +88,6 @@ int hadron_2ptFunction(const Parameters &params_all) {
 
   vout.general(vl, "\n");
   vout.general(vl, "Solving quark propagator:\n");
-  vout.general(vl, "  color spin   Nconv      diff           diff2\n");
 
   for (int ispin = 0; ispin < Nd; ++ispin) {
     for (int icolor = 0; icolor < Nc; ++icolor) {
@@ -153,7 +106,8 @@ int hadron_2ptFunction(const Parameters &params_all) {
       axpy(y, -1.0, b);         // y -= b;
       double diff2 = y.norm2() / b.norm2();
 
-      vout.general(vl, "   %2d   %2d   %6d   %12.4e   %12.4e\n", icolor, ispin, Nconv, diff, diff2);
+      vout.general(vl, "  color spin   Nconv      diff           diff2\n");
+      vout.general(vl, "   %2d   %2d   %6d   %12.4e   %12.4e\n\n", icolor, ispin, Nconv, diff, diff2);
     }
   }
 

@@ -3,25 +3,33 @@
 LQCD_ROOT_PATH = ../
 BRIDGE_INSTALL_PATH = $(LQCD_ROOT_PATH)/bridge-2.0.2/build
 
+SOURCE = ./src
+BIN = ./bin
+
 include $(BRIDGE_INSTALL_PATH)/make.inc
 
-headers =
-sources = sample_Spectrum.cpp
-objects = $(sources:%.cpp=%.o)
+PROG_NAME = solve_correlator
 
-program = sample_Spectrum
+PRE = 
 
-all: $(program)
+TARGETS = $(addprefix $(BIN)/,$(PROG_NAME))
+OBJS = $(addprefix $(SOURCE)/,$(PRE)) 
 
-$(program): $(objects)
-	$(LD) $(LDFLAGS) -o $@ $(objects) $(LDLIBS)
+all: msg bin $(TARGETS)
 
-%.o: %.cpp $(headers)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+bin:
+	mkdir -p $(BIN)
+
+$(TARGETS): $(BIN)/%: $(SOURCE)/%.o $(OBJS)
+	$(CXX) $(CXXFLAGS) $< $(OBJS) $(LDFLAGS) $(LDLIBS) -o $@
 
 msg:
 	@cat $(BRIDGE_INSTALL_PATH)/message.txt
 
 clean:
-	rm -f $(program) $(objects)
+	$(RM) $(SOURCE)/*.o
+
+clean.all:
+	$(RM) $(TARGETS)
+	$(RM) $(SOURCE)/*.o
 
