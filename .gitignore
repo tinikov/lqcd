@@ -483,6 +483,7 @@ ref/
 **/bin/
 **/fig/
 **/result/
+**/compile_commands.json
 
 ## articles
 article:gauge-dep/
