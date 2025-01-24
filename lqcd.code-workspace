@@ -41,17 +41,17 @@
 		],
 		"latex-workshop.latex.recipes": [
 			{
+				"name": "lualatex🔃",
+				"tools": [
+					"lualatex"
+				]
+			},
+			{
 				"name": "L→B→L→L",
 				"tools": [
 					"lualatex",
 					"bibtex",
 					"lualatex",
-					"lualatex"
-				]
-			},
-			{
-				"name": "lualatex🔃",
-				"tools": [
 					"lualatex"
 				]
 			},
