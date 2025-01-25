@@ -6,18 +6,18 @@
 	],
 	"settings": {
 		"latex-workshop.latex.tools": [
-			// {
-			// 	"name": "latexmk",
-			// 	"command": "latexmk",
-			// 	"args": [
-			// 		"-synctex=1",
-			// 		"-interaction=nonstopmode",
-			// 		"-file-line-error",
-			// 		"-outdir=%OUTDIR%",
-			// 		"%DOC%"
-			// 	],
-			// 	"env": {}
-			// },
+			{
+				"name": "latexmk",
+				"command": "latexmk",
+				"args": [
+					"-synctex=1",
+					"-interaction=nonstopmode",
+					"-file-line-error",
+					"-outdir=%OUTDIR%",
+					"%DOC%"
+				],
+				"env": {}
+			},
 			{
 				"name": "lualatex",
 				"command": "lualatex",
@@ -40,6 +40,12 @@
 			},
 		],
 		"latex-workshop.latex.recipes": [
+			// {
+			// 	"name": "latexMK🔃",
+			// 	"tools": [
+			// 		"latexmk"
+			// 	]
+			// },
 			{
 				"name": "lualatex🔃",
 				"tools": [

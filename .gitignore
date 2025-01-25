@@ -486,5 +486,5 @@ ref/
 **/compile_commands.json
 
 ## articles
-article:gauge-dep/
+article:gauge-dep
 article:lattice2024
