@@ -71,5 +71,6 @@
 		"files.associations": {
 			"string": "cpp"
 		},
+		"latex-workshop.formatting.latex": "latexindent",
 	}
 }
