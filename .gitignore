@@ -484,7 +484,3 @@ ref/
 **/fig/
 **/result/
 **/compile_commands.json
-
-## articles
-article:gauge-dep
-article:lattice2024
