@@ -6,8 +6,13 @@
 	],
 	"settings": {
 		"files.associations": {
-			"string": "cpp"
+			"string": "cpp",
+			"array": "cpp"
 		},
 		"makefile.makefilePath": "/Users/tinikov/lqcd/gauge_fixing/makefile",
+		"C_Cpp.default.includePath": [
+			"/opt/homebrew/include",
+			"/Users/tinikov/lqcd/libs"
+		],
 	}
 }
